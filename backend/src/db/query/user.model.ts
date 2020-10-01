@@ -12,7 +12,6 @@ export class UserModel {
       con.query('select * from USER_PROFILE where username = '+mysql.escape(user), (err, rows) => {
       if (err) throw err
       if (rows != []) {
-        console.log('got user data')
         resolve ({
           'username': rows[0].username,
           'password': rows[0].password
