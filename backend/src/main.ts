@@ -1,32 +1,33 @@
 import express from "express";
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import compression from 'compression';
 
-import path from "path";
 import dotenv from "dotenv";
+
+import { createAuthApiMiddleware } from "./app/auth.app";
+import { MysqlDbService } from "./db/MysqlDbService";
 
 //Initial environment config
 dotenv.config();
 
+//Initial App
 const app = express();
-const port = process.env.SERVER_PORT; // default port to listen
+const port = process.env.SERVER_PORT;
 
 
 // Configure Express to use EJS
-app.set( "views", path.join( __dirname, "views" ) );
-app.set( "view engine", "ejs" );
+app.set('view engine', 'ejs');
 
+app.use(compression());
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// define a route handler for the default home page
-app.get( "/", ( req, res ) => {
-    res.render("login")
-});
-
+app.use(createAuthApiMiddleware())
 
 // start the Express server
-app.listen( port, () => {
+app.listen(port, () => {
+    MysqlDbService.connect()
     console.log( `server started at http://localhost:${ port }` );
 } );
