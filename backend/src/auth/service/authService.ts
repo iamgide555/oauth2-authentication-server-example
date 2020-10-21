@@ -10,7 +10,8 @@ export class AuthService{
         if (result.username == user && result.password == password) {
             resolve (true);
           }
-          else {
+        else {
+          console.log("false")
             resolve (false)
           }
       })

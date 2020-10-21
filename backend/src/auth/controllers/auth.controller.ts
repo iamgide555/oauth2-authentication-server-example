@@ -18,6 +18,7 @@ export const tokenVerify = (req: Request, res: Response) => {
 }
 
 export const login = (req: Request, res: Response) => {
+  console.log("Call login")
   res.render('login')
 }
 
@@ -35,14 +36,15 @@ export const userLogin = async (req: Request, res: Response) => {
   // Check Username Password
   AuthService.authenticateUserCredentials(username, password).then(result => {
     if (!result) {
-      res.status(401).send({
-        'error': 'access_denied'
-      })
+      res.redirect(401,'http://localhost:4200/')
+      // res.status(401).send({
+      //   'error': 'access_denied'
+      // })
     }
     const access_token = AuthService.generateAccessToken(username);
     if (access_token) {
       res.cookie('access_token', access_token, { maxAge: 900000 })
-      res.send("fuck ya")
+      res.redirect('http://localhost:4200/')
     }
     else {
       res.status(500).send({
